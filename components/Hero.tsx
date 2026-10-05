@@ -73,7 +73,7 @@ export default function Hero() {
             href="#contact"
             className="rounded-full border border-white/15 px-6 py-3 font-medium transition hover:bg-white/10"
           >
-            Contact me
+            Contact me Now
           </a>
         </motion.div>
 
