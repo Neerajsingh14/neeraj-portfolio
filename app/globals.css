@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
+/* Midnight: near-black + indigo/sky */
 :root {
-  --bg: #0b0b14;
-  --surface: #14141f;
-  --fg: #f4f4f8;
-  --muted: #9a9ab0;
-  --accent: #8b5cf6;
-  --accent-2: #f472b6;
+  --bg: #08080d;
+  --surface: #101018;
+  --fg: #f4f4f7;
+  --muted: #9c9cb0;
+  --accent: #6366f1;
+  --accent-2: #38bdf8;
+  --accent-fg: #ffffff;
 }
 
 @theme inline {
@@ -16,9 +18,51 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-fg: var(--accent-fg);
+
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Page content width: side ki khali jagah kam
+   (max-width badalna ho to sirf yahan 1400px change karo) */
+.wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 3.5vw, 2.5rem);
+}
+/* left social rail ke liye jagah (sirf 1280-1535px screens pe) */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .wrap { padding-left: 5.25rem; }
+}
+
+/* project preview hint: mouse vs touch */
+.hint-touch { display: none; }
+@media (hover: none) {
+  .hint-touch { display: inline; }
+  .hint-mouse { display: none; }
 }
