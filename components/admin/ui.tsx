@@ -40,7 +40,7 @@ export function PageHeader({
 
 export function ActionBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="sticky bottom-4 z-20 mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-surface/95 p-3 pl-5 shadow-2xl shadow-black/50 backdrop-blur">
+    <div className="sticky bottom-4 z-20 mt-8 flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-surface p-3 pl-5 shadow-2xl shadow-black/50">
       {children}
     </div>
   );

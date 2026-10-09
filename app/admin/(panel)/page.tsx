@@ -3,9 +3,11 @@ import {
   ArrowUpRight,
   Award,
   Briefcase,
+  Circle,
+  CircleCheck,
+  ExternalLink,
   Eye,
   EyeOff,
-  ExternalLink,
   GraduationCap,
   Layers,
   Mail,
@@ -25,6 +27,8 @@ import { mailConfigured } from "@/lib/mail";
 export const dynamic = "force-dynamic";
 
 const card = "rounded-2xl border border-white/10 bg-surface";
+const R = 34;
+const C = 2 * Math.PI * R;
 
 export default async function AdminHome() {
   const [ctx, unread, recent] = await Promise.all([
@@ -34,6 +38,7 @@ export default async function AdminHome() {
   ]);
 
   const c = ctx.content;
+  const g = ctx.global;
   const live = ctx.meta.profiles.find((p) => p.id === ctx.meta.active);
   const editing = ctx.meta.profiles.find((p) => p.id === ctx.pid);
   const mailOn = mailConfigured();
@@ -48,6 +53,62 @@ export default async function AdminHome() {
   );
   const greet =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
+  /* ---- setup checklist ---- */
+  const missingLive = c.projects.filter((p) => p.visible && !p.live).length;
+  const checks = [
+    {
+      ok: !!c.hero.photo,
+      todo: "Add a profile photo",
+      done: "Profile photo added",
+      href: "/admin/hero",
+    },
+    {
+      ok: c.projects.some((p) => p.visible && p.image),
+      todo: "Add a screenshot to a project",
+      done: "Project screenshots added",
+      href: "/admin/projects",
+    },
+    {
+      ok: missingLive === 0,
+      todo: `Add live demo links (${missingLive} project${missingLive === 1 ? "" : "s"} missing)`,
+      done: "All projects have live demo links",
+      href: "/admin/projects",
+    },
+    {
+      ok: c.about.paragraphs.filter((p) => p.trim()).length >= 2,
+      todo: "Write at least 2 About paragraphs",
+      done: "About section written",
+      href: "/admin/about",
+    },
+    {
+      ok: !!(g.github && g.linkedin && g.instagram),
+      todo: "Add all social links",
+      done: "Social links added",
+      href: "/admin/settings",
+    },
+    {
+      ok: !!g.resume,
+      todo: "Add your resume link",
+      done: "Resume link added",
+      href: "/admin/settings",
+    },
+    {
+      ok: vis(c.certificates) > 0,
+      todo: "Add a certificate",
+      done: "Certificates added",
+      href: "/admin/certificates",
+    },
+    {
+      ok: mailOn,
+      todo: "Turn on email alerts",
+      done: "Email alerts are on",
+      href: "/admin/messages",
+    },
+  ];
+  const doneCount = checks.filter((x) => x.ok).length;
+  const pct = Math.round((doneCount / checks.length) * 100);
+  const ordered = [...checks.filter((x) => !x.ok), ...checks.filter((x) => x.ok)];
 
   const stats: {
     label: string;
@@ -97,34 +158,81 @@ export default async function AdminHome() {
               "radial-gradient(620px 280px at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%), radial-gradient(520px 260px at 0% 100%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 70%)",
           }}
         />
-        <div className="relative">
-          <p className="font-mono text-xs uppercase tracking-widest text-accent">
-            {greet}
-          </p>
-          <h1 className="mt-3 text-3xl font-bold sm:text-5xl">
-            Welcome back, {ctx.global.brand}
-          </h1>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted sm:text-base">
-            Yahan se site ka poora content badlo. Save karte hi public site update ho
-            jati hai.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              href="/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition hover:brightness-110"
-            >
-              <ExternalLink size={16} />
-              View live site
-            </a>
-            <Link
-              href="/admin/profiles"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-5 py-3 text-sm font-medium transition hover:border-accent hover:text-accent"
-            >
-              <Layers size={16} />
-              Manage profiles
-            </Link>
+        <div className="relative flex flex-wrap items-center justify-between gap-8">
+          <div className="min-w-0 max-w-xl">
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">
+              {greet}
+            </p>
+            <h1 className="mt-3 text-3xl font-bold sm:text-5xl">
+              Welcome back, {g.brand}
+            </h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted sm:text-base">
+              Yahan se site ka poora content badlo. Save karte hi public site update ho
+              jati hai.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a
+                href="/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-accent-fg transition hover:brightness-110"
+              >
+                <ExternalLink size={16} />
+                View live site
+              </a>
+              <Link
+                href="/admin/profiles"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-5 py-3 text-sm font-medium transition hover:border-accent hover:text-accent"
+              >
+                <Layers size={16} />
+                Manage profiles
+              </Link>
+            </div>
+          </div>
+
+          {/* completeness ring */}
+          <div className="flex items-center gap-5">
+            <div className="relative h-32 w-32 shrink-0">
+              <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90">
+                <defs>
+                  <linearGradient id="pc-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" style={{ stopColor: "var(--accent)" }} />
+                    <stop offset="1" style={{ stopColor: "var(--accent-2)" }} />
+                  </linearGradient>
+                </defs>
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={R}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="7"
+                />
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={R}
+                  fill="none"
+                  stroke="url(#pc-grad)"
+                  strokeWidth="7"
+                  strokeLinecap="round"
+                  strokeDasharray={C}
+                  strokeDashoffset={C * (1 - pct / 100)}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="font-display text-3xl font-bold">{pct}%</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+                  Complete
+                </span>
+              </div>
+            </div>
+            <div className="hidden sm:block">
+              <p className="font-semibold">Profile setup</p>
+              <p className="mt-1 text-sm text-muted">
+                {doneCount} of {checks.length} done
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -163,7 +271,7 @@ export default async function AdminHome() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((s) => {
             const Icon = s.icon;
-            const pct = s.total ? Math.round((s.shown / s.total) * 100) : 0;
+            const p = s.total ? Math.round((s.shown / s.total) * 100) : 0;
             return (
               <Link
                 key={s.label}
@@ -187,7 +295,7 @@ export default async function AdminHome() {
                 <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-accent to-accent-2"
-                    style={{ width: `${pct}%` }}
+                    style={{ width: `${p}%` }}
                   />
                 </div>
               </Link>
@@ -196,47 +304,86 @@ export default async function AdminHome() {
         </div>
       </div>
 
-      {/* sections + side column */}
+      {/* checklist + sections | messages + status */}
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <div className={`${card} p-5 sm:p-6`}>
-          <div className="flex items-center justify-between">
-            <p className="font-semibold">Sections on your site</p>
-            <Link
-              href="/admin/sections"
-              className="text-sm text-accent transition hover:underline"
-            >
-              Edit headings
-            </Link>
-          </div>
-          <div className="mt-4 divide-y divide-white/10">
-            {sections.map((s) => {
-              const Icon = s.icon;
-              return (
+        <div className="space-y-6">
+          <div className={`${card} p-5 sm:p-6`}>
+            <div className="flex items-center justify-between">
+              <p className="font-semibold">Setup checklist</p>
+              <span className="font-mono text-xs text-muted">
+                {doneCount}/{checks.length}
+              </span>
+            </div>
+            <div className="mt-4 space-y-1.5">
+              {ordered.map((x) => (
                 <Link
-                  key={s.label}
-                  href={s.href}
-                  className="group flex items-center gap-4 py-3.5 transition first:pt-1 last:pb-1"
+                  key={x.todo}
+                  href={x.href}
+                  className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-white/[0.04]"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-muted transition group-hover:bg-accent/15 group-hover:text-accent">
-                    <Icon size={18} />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[15px] font-medium">{s.label}</span>
-                    <span className="block text-sm text-muted">{s.count}</span>
-                  </span>
+                  {x.ok ? (
+                    <CircleCheck size={19} className="shrink-0 text-green-400" />
+                  ) : (
+                    <Circle size={19} className="shrink-0 text-amber-300" />
+                  )}
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] ${
-                      s.show
-                        ? "border-green-400/30 bg-green-400/10 text-green-400"
-                        : "border-white/10 bg-white/5 text-muted"
+                    className={`min-w-0 flex-1 text-[15px] ${
+                      x.ok ? "text-muted" : ""
                     }`}
                   >
-                    {s.show ? <Eye size={12} /> : <EyeOff size={12} />}
-                    {s.show ? "Shown" : "Hidden"}
+                    {x.ok ? x.done : x.todo}
                   </span>
+                  {!x.ok && (
+                    <ArrowUpRight
+                      size={15}
+                      className="shrink-0 text-muted transition group-hover:text-accent"
+                    />
+                  )}
                 </Link>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+
+          <div className={`${card} p-5 sm:p-6`}>
+            <div className="flex items-center justify-between">
+              <p className="font-semibold">Sections on your site</p>
+              <Link
+                href="/admin/sections"
+                className="text-sm text-accent transition hover:underline"
+              >
+                Edit headings
+              </Link>
+            </div>
+            <div className="mt-4 divide-y divide-white/10">
+              {sections.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <Link
+                    key={s.label}
+                    href={s.href}
+                    className="group flex items-center gap-4 py-3.5 transition first:pt-1 last:pb-1"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-muted transition group-hover:bg-accent/15 group-hover:text-accent">
+                      <Icon size={18} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15px] font-medium">{s.label}</span>
+                      <span className="block text-sm text-muted">{s.count}</span>
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] ${
+                        s.show
+                          ? "border-green-400/30 bg-green-400/10 text-green-400"
+                          : "border-white/10 bg-white/5 text-muted"
+                      }`}
+                    >
+                      {s.show ? <Eye size={12} /> : <EyeOff size={12} />}
+                      {s.show ? "Shown" : "Hidden"}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
 

@@ -2,9 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import { AnimatePresence, motion, useAnimationControls } from "motion/react";
 import {
   ArrowLeft,
+  ArrowRight,
+  Check,
   Eye,
   EyeOff,
   ImagePlus,
@@ -14,24 +16,30 @@ import {
   Mail,
   MailCheck,
   Pencil,
+  ShieldCheck,
+  TriangleAlert,
 } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
 
 const features = [
-  { icon: Pencil, title: "Edit every section", text: "Hero, projects, skills and more, without touching code." },
+  { icon: Pencil, title: "Edit every section", text: "Hero, projects, skills and more. No code needed." },
   { icon: Layers, title: "Multiple profiles", text: "AI Powered, Frontend, or any role you need." },
   { icon: ImagePlus, title: "Image uploads", text: "Screenshots and photos go straight to storage." },
   { icon: MailCheck, title: "Email alerts", text: "Contact form messages land in your inbox." },
 ];
 
+const label = "mb-2 block text-sm font-medium";
+
 export default function AdminLogin() {
   const router = useRouter();
+  const shake = useAnimationControls();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [caps, setCaps] = useState(false);
   const [error, setError] = useState("");
-  const [shake, setShake] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,11 +52,13 @@ export default function AdminLogin() {
     });
 
     if (error) {
-      setError("Wrong email or password");
-      setShake((n) => n + 1);
+      setError("Wrong email or password. Please try again.");
+      shake.start({ x: [0, -10, 10, -7, 7, 0], transition: { duration: 0.4 } });
       setLoading(false);
       return;
     }
+
+    setDone(true);
     router.replace("/admin");
     router.refresh();
   };
@@ -57,14 +67,14 @@ export default function AdminLogin() {
     "w-full rounded-xl border border-white/10 bg-bg/60 py-3.5 pl-12 pr-4 text-[15px] outline-none transition placeholder:text-muted/60 hover:border-white/20 focus:border-accent focus:ring-4 focus:ring-accent/10";
 
   return (
-    <main className="grid min-h-screen bg-bg lg:grid-cols-[1.1fr_1fr]">
+    <main className="grid min-h-dvh bg-bg lg:grid-cols-[1.05fr_1fr]">
       {/* LEFT: brand */}
-      <section className="relative hidden overflow-hidden border-r border-white/10 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
+      <section className="relative hidden overflow-hidden border-r border-white/10 lg:block">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(700px 420px at 15% 8%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%), radial-gradient(600px 400px at 90% 95%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 65%)",
+              "radial-gradient(700px 420px at 12% 6%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 65%), radial-gradient(600px 420px at 95% 100%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 65%)",
           }}
         />
         <div
@@ -73,164 +83,232 @@ export default function AdminLogin() {
             backgroundImage:
               "linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px)",
             backgroundSize: "44px 44px",
-            maskImage: "radial-gradient(ellipse at 30% 30%, black, transparent 75%)",
-            WebkitMaskImage: "radial-gradient(ellipse at 30% 30%, black, transparent 75%)",
+            maskImage: "radial-gradient(ellipse at 30% 35%, black, transparent 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse at 30% 35%, black, transparent 75%)",
           }}
         />
+        <motion.div
+          animate={{ x: [0, 40, 0], y: [0, 24, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          className="pointer-events-none absolute -left-10 top-1/3 h-72 w-72 rounded-full bg-accent/15 blur-3xl"
+        />
 
-        <p className="relative font-mono text-2xl font-bold">
-          <span className="text-accent">&lt;</span>Admin
-          <span className="text-accent">/&gt;</span>
-        </p>
-
-        <div className="relative max-w-lg">
-          <h2 className="text-4xl font-bold leading-tight xl:text-5xl">
-            Your portfolio,{" "}
-            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-              fully in your control.
+        <div className="relative flex h-full min-h-dvh flex-col justify-between gap-10 p-10 xl:p-14">
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-2xl font-bold">
+              <span className="text-accent">&lt;</span>Admin
+              <span className="text-accent">/&gt;</span>
+            </p>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 font-mono text-xs text-muted">
+              <ShieldCheck size={14} className="text-accent" />
+              Private area
             </span>
-          </h2>
-          <p className="mt-4 text-base text-muted">
-            Update content, switch profiles and read messages from one clean dashboard.
+          </div>
+
+          <div className="max-w-xl">
+            <h2 className="text-4xl font-bold leading-[1.1] xl:text-5xl">
+              Your portfolio,{" "}
+              <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
+                fully in your control.
+              </span>
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted">
+              Update content, switch profiles and read messages from one clean
+              dashboard.
+            </p>
+
+            <div className="mt-10 grid gap-3 sm:grid-cols-2">
+              {features.map((f, i) => {
+                const Icon = f.icon;
+                return (
+                  <motion.div
+                    key={f.title}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 + i * 0.08 }}
+                    className="rounded-2xl border border-white/10 bg-surface/60 p-4"
+                  >
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                      <Icon size={19} />
+                    </span>
+                    <p className="mt-3 font-semibold">{f.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">{f.text}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          <p className="text-sm text-muted/80">
+            Only the site owner can sign in. All changes go live as soon as you save.
           </p>
-
-          <ul className="mt-9 space-y-5">
-            {features.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <motion.li
-                  key={f.title}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15 + i * 0.1 }}
-                  className="flex items-start gap-4"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-accent">
-                    <Icon size={20} />
-                  </span>
-                  <span>
-                    <span className="block font-semibold">{f.title}</span>
-                    <span className="block text-sm text-muted">{f.text}</span>
-                  </span>
-                </motion.li>
-              );
-            })}
-          </ul>
-        </div>
-
-        {/* mock preview */}
-        <div className="relative max-w-sm rounded-2xl border border-white/10 bg-surface/70 p-4 shadow-2xl shadow-black/40">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
-          </div>
-          <div className="mt-4 space-y-2.5">
-            <div className="h-3 w-2/3 animate-pulse rounded bg-white/10" />
-            <div className="h-3 w-full animate-pulse rounded bg-white/5" />
-            <div className="h-3 w-4/5 animate-pulse rounded bg-white/5" />
-          </div>
-          <div className="mt-4 flex gap-2">
-            <span className="rounded-lg bg-accent/20 px-3 py-1 font-mono text-[11px] text-accent">
-              Saved
-            </span>
-            <span className="rounded-lg bg-white/5 px-3 py-1 font-mono text-[11px] text-muted">
-              Live on site
-            </span>
-          </div>
         </div>
       </section>
 
       {/* RIGHT: form */}
       <section className="relative flex flex-col px-5 py-6 sm:px-10">
-        <div className="flex items-center justify-between">
-          <p className="font-mono text-xl font-bold lg:invisible">
+        <div
+          className="pointer-events-none absolute inset-0 lg:hidden"
+          style={{
+            background:
+              "radial-gradient(520px 320px at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%)",
+          }}
+        />
+
+        <div className="relative flex items-center justify-between">
+          <p className="font-mono text-xl font-bold lg:hidden">
             <span className="text-accent">&lt;</span>Admin
             <span className="text-accent">/&gt;</span>
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-accent"
+            className="ml-auto inline-flex items-center gap-2 text-sm text-muted transition hover:text-accent"
           >
             <ArrowLeft size={16} />
             Back to site
           </Link>
         </div>
 
-        <div className="flex flex-1 items-center justify-center py-8">
-          <motion.form
-            key={shake}
-            onSubmit={submit}
+        <div className="relative flex flex-1 items-center justify-center py-8">
+          <motion.div
             initial={{ opacity: 0, y: 14 }}
-            animate={error ? { x: [0, -10, 10, -7, 7, 0], opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-            transition={{ duration: error ? 0.4 : 0.5 }}
-            className="w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-surface/80 shadow-2xl shadow-black/50"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-md"
           >
-            <span className="block h-1 bg-gradient-to-r from-accent to-accent-2" />
-            <div className="p-7 sm:p-9">
-              <h1 className="text-3xl font-bold">Welcome back</h1>
-              <p className="mt-2 text-[15px] text-muted">
-                Login to manage your portfolio.
-              </p>
+            <motion.form
+              onSubmit={submit}
+              animate={shake}
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-surface shadow-2xl shadow-black/50"
+            >
+              <span className="block h-1 bg-gradient-to-r from-accent to-accent-2" />
 
-              <div className="mt-8 flex flex-col gap-4">
-                <div className="relative">
-                  <Mail
-                    size={18}
-                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
-                  />
-                  <input
-                    required
-                    autoFocus
-                    type="email"
-                    placeholder="Email"
-                    autoComplete="email"
-                    className={input}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
+              <div className="p-7 sm:p-9">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent to-accent-2 text-accent-fg">
+                  <Lock size={22} />
+                </span>
+                <h1 className="mt-5 text-3xl font-bold">Welcome back</h1>
+                <p className="mt-2 text-[15px] text-muted">
+                  Login to manage your portfolio.
+                </p>
 
-                <div className="relative">
-                  <Lock
-                    size={18}
-                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
-                  />
-                  <input
-                    required
-                    type={show ? "text" : "password"}
-                    placeholder="Password"
-                    autoComplete="current-password"
-                    className={`${input} pr-14`}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                <div className="mt-8 flex flex-col gap-5">
+                  <div>
+                    <label htmlFor="a-email" className={label}>
+                      Email address
+                    </label>
+                    <div className="relative">
+                      <Mail
+                        size={18}
+                        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
+                      />
+                      <input
+                        id="a-email"
+                        required
+                        autoFocus
+                        type="email"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        className={input}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="a-pass" className={label}>
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock
+                        size={18}
+                        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
+                      />
+                      <input
+                        id="a-pass"
+                        required
+                        type={show ? "text" : "password"}
+                        placeholder="Enter your password"
+                        autoComplete="current-password"
+                        className={`${input} pr-14`}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyUp={(e) => setCaps(e.getModifierState("CapsLock"))}
+                        onBlur={() => setCaps(false)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShow((v) => !v)}
+                        aria-label={show ? "Hide password" : "Show password"}
+                        className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition hover:bg-white/10 hover:text-fg"
+                      >
+                        {show ? <EyeOff size={19} /> : <Eye size={19} />}
+                      </button>
+                    </div>
+
+                    <AnimatePresence>
+                      {caps && (
+                        <motion.p
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <span className="mt-2 flex items-center gap-2 text-sm text-amber-300">
+                            <TriangleAlert size={15} />
+                            Caps Lock is on
+                          </span>
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <AnimatePresence>
+                    {error && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-start gap-2 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-300"
+                      >
+                        <TriangleAlert size={16} className="mt-0.5 shrink-0" />
+                        {error}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+
                   <button
-                    type="button"
-                    onClick={() => setShow((v) => !v)}
-                    aria-label={show ? "Hide password" : "Show password"}
-                    className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition hover:bg-white/10 hover:text-fg"
+                    disabled={loading || done}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-accent-fg transition hover:brightness-110 active:scale-[0.98] disabled:opacity-80"
                   >
-                    {show ? <EyeOff size={19} /> : <Eye size={19} />}
+                    {done ? (
+                      <>
+                        <Check size={18} />
+                        Signed in
+                      </>
+                    ) : loading ? (
+                      <>
+                        <LoaderCircle size={18} className="animate-spin" />
+                        Signing in...
+                      </>
+                    ) : (
+                      <>
+                        Login
+                        <ArrowRight size={18} />
+                      </>
+                    )}
                   </button>
                 </div>
-
-                {error && (
-                  <p className="rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-2.5 text-sm text-red-300">
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  disabled={loading}
-                  className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-accent-fg transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
-                >
-                  {loading && <LoaderCircle size={18} className="animate-spin" />}
-                  {loading ? "Signing in..." : "Login"}
-                </button>
               </div>
-            </div>
-          </motion.form>
+            </motion.form>
+
+            <p className="mt-5 flex items-center justify-center gap-2 text-xs text-muted">
+              <ShieldCheck size={14} />
+              Secured sign in. Your session stays private to this browser.
+            </p>
+          </motion.div>
         </div>
       </section>
     </main>

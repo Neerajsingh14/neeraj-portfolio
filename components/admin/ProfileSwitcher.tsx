@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { selectProfile } from "@/lib/actions";
 import { useAdmin } from "./AdminContext";
 
@@ -61,11 +62,11 @@ export default function ProfileSwitcher({
         aria-haspopup="listbox"
         aria-expanded={open}
         disabled={pending}
-        className={`flex w-full items-center gap-3 rounded-xl border bg-bg/60 px-3.5 py-3 text-left transition hover:border-white/25 disabled:opacity-60 ${
+        className={`flex w-full items-center gap-3 rounded-xl border bg-bg/60 px-3 py-2.5 text-left transition hover:border-white/25 disabled:opacity-60 ${
           open ? "border-accent" : "border-white/10"
         }`}
       >
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2 font-display text-sm font-bold text-accent-fg">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2 font-display text-sm font-bold text-accent-fg">
           {(cur?.label ?? "?").charAt(0).toUpperCase()}
         </span>
         <span className="min-w-0 flex-1">
@@ -79,36 +80,51 @@ export default function ProfileSwitcher({
 
       <AnimatePresence>
         {open && (
-          <motion.ul
-            role="listbox"
+          <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
             className="absolute left-0 right-0 z-30 mt-2 overflow-hidden rounded-xl border border-white/10 bg-surface p-1.5 shadow-2xl shadow-black/60"
           >
-            {profiles.map((p) => (
-              <li key={p.id} role="option" aria-selected={p.id === current}>
-                <button
-                  type="button"
-                  onClick={() => pick(p.id)}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition ${
-                    p.id === current
-                      ? "bg-accent/15 text-accent"
-                      : "text-muted hover:bg-white/5 hover:text-fg"
-                  }`}
-                >
-                  <span className="min-w-0 flex-1 truncate">{p.label}</span>
-                  {p.id === active && (
-                    <span className="rounded-full border border-green-400/40 bg-green-400/10 px-2 py-0.5 font-mono text-[10px] text-green-400">
-                      Live
-                    </span>
-                  )}
-                  {p.id === current && <Check size={15} />}
-                </button>
-              </li>
-            ))}
-          </motion.ul>
+            <ul role="listbox" className="space-y-0.5">
+              {profiles.map((p) => (
+                <li key={p.id} role="option" aria-selected={p.id === current}>
+                  <button
+                    type="button"
+                    onClick={() => pick(p.id)}
+                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition ${
+                      p.id === current
+                        ? "bg-accent/15 text-accent"
+                        : "text-muted hover:bg-white/5 hover:text-fg"
+                    }`}
+                  >
+                    <span className="min-w-0 flex-1 truncate">{p.label}</span>
+                    {p.id === active && (
+                      <span className="rounded-full border border-green-400/40 bg-green-400/10 px-2 py-0.5 font-mono text-[10px] text-green-400">
+                        Live
+                      </span>
+                    )}
+                    {p.id === current && <Check size={15} />}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/admin/profiles"
+              onClick={(e) => {
+                if (!confirmLeave()) {
+                  e.preventDefault();
+                  return;
+                }
+                setOpen(false);
+              }}
+              className="mt-1.5 flex items-center gap-2 border-t border-white/10 px-3 pb-2 pt-3 text-sm text-accent transition hover:text-accent-2"
+            >
+              <Plus size={15} />
+              Manage profiles
+            </Link>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

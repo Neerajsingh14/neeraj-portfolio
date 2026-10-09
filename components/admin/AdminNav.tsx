@@ -79,7 +79,7 @@ export default function AdminNav({
           }
           onNavigate?.();
         }}
-        className={`relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] transition-colors ${
+        className={`group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] transition-colors ${
           on ? "text-fg" : "text-muted hover:bg-white/5 hover:text-fg"
         }`}
       >
@@ -88,12 +88,22 @@ export default function AdminNav({
             layoutId={`${idPrefix}-nav`}
             transition={{ type: "spring", stiffness: 420, damping: 34 }}
             className="absolute inset-0 rounded-xl bg-accent/15 ring-1 ring-accent/30"
-          />
+          >
+            <span className="absolute bottom-2.5 left-0 top-2.5 w-[3px] rounded-r-full bg-accent" />
+          </motion.span>
         )}
-        <Icon size={18} className={`relative ${on ? "text-accent" : ""}`} />
-        <span className="relative">{it.label}</span>
+        <span
+          className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
+            on
+              ? "bg-accent/20 text-accent"
+              : "bg-white/5 group-hover:bg-white/10"
+          }`}
+        >
+          <Icon size={17} />
+        </span>
+        <span className="relative min-w-0 flex-1 truncate">{it.label}</span>
         {it.href === "/admin/messages" && unread > 0 && (
-          <span className="relative ml-auto rounded-full bg-accent px-2 py-0.5 font-mono text-[11px] font-semibold text-accent-fg">
+          <span className="relative rounded-full bg-accent px-2 py-0.5 font-mono text-[11px] font-semibold text-accent-fg">
             {unread}
           </span>
         )}
@@ -102,13 +112,14 @@ export default function AdminNav({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-1">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1">
         {item({ href: "/admin", label: "Dashboard", icon: LayoutDashboard })}
       </div>
+
       {groups.map((g) => (
-        <div key={g.title} className="space-y-1">
-          <p className="px-3.5 pb-1 font-mono text-[11px] uppercase tracking-widest text-muted/60">
+        <div key={g.title} className="flex flex-col gap-1">
+          <p className="px-2.5 pb-1 font-mono text-[11px] uppercase tracking-widest text-muted/60">
             {g.title}
           </p>
           {g.items.map(item)}
