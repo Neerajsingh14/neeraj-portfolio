@@ -1,10 +1,9 @@
 export const profile = {
   name: "Neeraj Singh Rajpurohit",
   shortName: "Neeraj",
-  role: "Full Stack Web Developer",
-  headline: "I build web products people remember.",
+  role: "AI Powered Web Developer",
   tagline:
-    "MCA graduate crafting responsive, scalable and user-centric web applications with React, Tailwind CSS and Spring Boot.",
+    "MCA graduate building fast, responsive web experiences with React, Next.js and Tailwind CSS, powered by AI.",
   location: "Bengaluru, India",
   email: "neerajpurohit520@gmail.com",
   phone: "+91 8769667289",
@@ -13,8 +12,9 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/neeraj-singh-rajpurohit/",
   instagram: "https://www.instagram.com/neerajsingh.14/",
   resume: "/Neeraj_Singh_Rajpurohit_Resume.pdf",
-  summary:
-    "A passionate and results-driven Full Stack Web Developer with a Master's degree in Computer Applications (MCA) and hands-on experience in designing and developing responsive web applications. I build scalable, user-centric solutions through academic and personal projects, with a strong understanding of software development principles and modern web technologies.",
+  // apni photo public folder me rakho (jaise public/profile.jpg) aur yahan "/profile.jpg" likho
+  // khali rahe to "NR" monogram dikhega
+  photo: "",
 };
 
 export const whatsappUrl = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(
@@ -44,54 +44,49 @@ export const navLinks = [
 
 /* ---------------- About ---------------- */
 export const aboutParagraphs = [
-  profile.summary,
-  "My journey began with a BCA at Lachoo Memorial College in Jodhpur, where I built Think Fit, a gym management and fitness tracker, as my graduation project. I then completed my MCA at Presidency University, Bangalore with a final CGPA of 8.9, building full stack systems like MR Reporting Software and EduPortal.",
-  "Alongside development, my work as a Business Development Executive at Elytespark taught me to listen closely, communicate clearly and work towards targets. These skills help me understand what users and teams actually need before I write a single line of code.",
+  "I'm an AI-powered web developer based in Bengaluru with a Master's in Computer Applications (MCA). I build fast, responsive interfaces with React, Next.js and Tailwind CSS, and use AI tools to design, build and ship faster.",
+  "Backed by Oracle certifications in Generative AI and AI Foundations, I enjoy building smarter products. I have also delivered full stack projects like MR Reporting Software and EduPortal with Spring Boot and PostgreSQL, and I'm available for freelance projects and open to frontend or full stack roles.",
 ];
 
 export const facts = [
-  { icon: "pin", label: "Based in", value: "Bengaluru, India" },
-  { icon: "grad", label: "Education", value: "MCA, Presidency University (CGPA 8.9)" },
-  { icon: "briefcase", label: "Experience", value: "Frontend Intern, Business Development" },
-  { icon: "target", label: "Open to", value: "Full-time roles, internships and freelance work" },
-];
-
-export const whatIDo = [
-  {
-    icon: "layers",
-    title: "Full Stack Development",
-    text: "End-to-end web apps with React on the front and Spring Boot with PostgreSQL behind it.",
-  },
-  {
-    icon: "smartphone",
-    title: "Responsive UI",
-    text: "Mobile-first interfaces built with Tailwind CSS and clean, reusable components.",
-  },
-  {
-    icon: "database",
-    title: "Backend & Databases",
-    text: "Backend services and data layers using Spring Boot, PostgreSQL, MySQL and MongoDB.",
-  },
-  {
-    icon: "brain",
-    title: "AI & Cloud Foundations",
-    text: "Oracle Cloud certified in Generative AI and AI Foundations, exploring how AI fits into products.",
-  },
-];
-
-export const principles = [
-  "Clean, maintainable code",
-  "Responsive by default",
-  "Clear communication",
-  "Delivered on deadlines",
+  { label: "Role", value: "AI Powered Web Developer" },
+  { label: "Based in", value: "Bengaluru, India" },
+  { label: "Education", value: "MCA, Presidency University" },
+  { label: "Open to", value: "Freelance, full-time, internships" },
 ];
 
 /* ---------------- Skills ---------------- */
 export type Skill = { name: string; icon?: string; invert?: boolean };
+export type SkillGroup = { title: string; note: string; items: Skill[] };
 
-export const skillGroups: { title: string; items: Skill[] }[] = [
+export const skillGroups: SkillGroup[] = [
+  {
+    title: "Frontend",
+    note: "What I use to build interfaces",
+    items: [
+      { name: "HTML", icon: "html5" },
+      { name: "CSS", icon: "css3" },
+      { name: "JavaScript", icon: "javascript" },
+      { name: "React", icon: "react" },
+      { name: "Next.js", icon: "nextjs", invert: true },
+      { name: "Tailwind CSS", icon: "tailwindcss" },
+      { name: "Bootstrap", icon: "bootstrap" },
+    ],
+  },
+  {
+    title: "Backend & Database",
+    note: "Data and APIs",
+    items: [
+      { name: "Spring Boot", icon: "spring" },
+      { name: "Supabase", icon: "supabase" },
+      { name: "PostgreSQL", icon: "postgresql" },
+      { name: "MySQL", icon: "mysql" },
+      { name: "MongoDB", icon: "mongodb" },
+    ],
+  },
   {
     title: "Languages",
+    note: "Programming languages",
     items: [
       { name: "Java", icon: "java" },
       { name: "Python", icon: "python" },
@@ -99,40 +94,13 @@ export const skillGroups: { title: string; items: Skill[] }[] = [
     ],
   },
   {
-    title: "Frontend",
-    items: [
-      { name: "HTML", icon: "html5" },
-      { name: "CSS", icon: "css3" },
-      { name: "JavaScript", icon: "javascript" },
-      { name: "React", icon: "react" },
-      { name: "Tailwind CSS", icon: "tailwindcss" },
-      { name: "Bootstrap", icon: "bootstrap" },
-    ],
-  },
-  {
-    title: "Backend",
-    items: [{ name: "Spring Boot", icon: "spring" }],
-  },
-  {
-    title: "Databases",
-    items: [
-      { name: "MySQL", icon: "mysql" },
-      { name: "PostgreSQL", icon: "postgresql" },
-      { name: "MongoDB", icon: "mongodb" },
-    ],
-  },
-  {
-    title: "DevOps",
-    items: [
-      { name: "Docker", icon: "docker" },
-      { name: "CI/CD Pipeline", icon: "githubactions", invert: true },
-    ],
-  },
-  {
-    title: "Tools",
+    title: "Tools & DevOps",
+    note: "Workflow and delivery",
     items: [
       { name: "GitHub", icon: "github", invert: true },
       { name: "VS Code", icon: "vscode" },
+      { name: "Docker", icon: "docker" },
+      { name: "CI/CD Pipeline", icon: "githubactions", invert: true },
     ],
   },
 ];
@@ -190,20 +158,20 @@ export const experience: ExperienceItem[] = [
 /* ---------------- Projects ---------------- */
 export type Project = {
   title: string;
-  category: string;
+  categories: string[]; // pehli category card pe chip me dikhti hai, baaki filter ke liye
   period: string;
   description: string;
   highlights: string[];
   tech: string[];
   github: string;
-  live?: string; // live demo ka link yahan daalo, khali rahe to button disabled dikhega
+  live?: string; // live demo link, khali rahe to button disabled dikhega
   image?: string; // jaise "/projects/mr-reporting.png" (public folder me rakho)
 };
 
 export const projects: Project[] = [
   {
     title: "MR Reporting Software",
-    category: "Full Stack",
+    categories: ["Full Stack", "Dashboards & ERP"],
     period: "Feb 2026 - May 2026",
     description:
       "A role-based MR reporting system with Admin, MR and Manager modules to streamline daily field activity tracking, including doctor visits, medicines promoted and order details.",
@@ -213,11 +181,11 @@ export const projects: Project[] = [
     ],
     tech: ["React.js", "Tailwind CSS", "Spring Boot", "PostgreSQL"],
     github: "https://github.com/Neerajsingh14",
-    live: "",
+    live: "https://mrreporting.netlify.app/",
   },
   {
     title: "EduPortal",
-    category: "Full Stack",
+    categories: ["Full Stack", "Dashboards & ERP", "Academic"],
     period: "University ERP System",
     description:
       "A role-based university ERP system to manage students, faculty, parents and administrative workflows, with attendance tracking, academic monitoring and admission management.",
@@ -227,11 +195,11 @@ export const projects: Project[] = [
     ],
     tech: ["React.js", "Tailwind CSS", "Spring Boot", "PostgreSQL"],
     github: "https://github.com/Neerajsingh14",
-    live: "",
+    live: "https://lnkd.in/p/g-Bwi9m5",
   },
   {
     title: "Weather App",
-    category: "Frontend",
+    categories: ["Frontend", "API Integration"],
     period: "Apr 2025 - May 2025",
     description:
       "A responsive real-time weather forecast application that shows temperature, humidity, wind speed and weather conditions based on the user's location or search input.",
@@ -245,7 +213,7 @@ export const projects: Project[] = [
   },
   {
     title: "Think Fit",
-    category: "Full Stack",
+    categories: ["Full Stack", "Academic"],
     period: "Jan 2023 - May 2023",
     description:
       "A gym management and fitness tracker app built as a graduation project. Users log daily workouts, track progress and receive personalized diet recommendations.",
@@ -257,6 +225,15 @@ export const projects: Project[] = [
     github: "https://github.com/Neerajsingh14",
     live: "",
   },
+];
+
+// filter tabs ka order (jis category me project nahi hoga wo tab apne aap hide)
+export const projectFilterOrder = [
+  "Full Stack",
+  "Frontend",
+  "Dashboards & ERP",
+  "API Integration",
+  "Academic",
 ];
 
 /* ---------------- Education ---------------- */
@@ -272,15 +249,6 @@ export type EducationItem = {
 
 export const education: EducationItem[] = [
   {
-    short: "MCA",
-    degree: "Master of Computer Applications",
-    school: "Presidency University, Bangalore",
-    start: "2024",
-    end: "2026",
-    score: 8.9,
-    label: "Final CGPA",
-  },
-  {
     short: "BCA",
     degree: "Bachelor of Computer Applications",
     school: "Lachoo Memorial College of Science and Technology, Jodhpur",
@@ -289,11 +257,21 @@ export const education: EducationItem[] = [
     score: 8.3,
     label: "Final CGPA",
   },
+  {
+    short: "MCA",
+    degree: "Master of Computer Applications",
+    school: "Presidency University, Bangalore",
+    start: "2024",
+    end: "2026",
+    score: 8.9,
+    label: "Final CGPA",
+  },
 ];
 
 /* ---------------- Certificates ---------------- */
 export type Certificate = {
   title: string;
+  short: string;
   issuer: string;
   tag: string;
   color: string;
@@ -306,6 +284,7 @@ export type Certificate = {
 export const certificates: Certificate[] = [
   {
     title: "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
+    short: "Generative AI Professional",
     issuer: "Oracle",
     tag: "AI & Cloud",
     color: "#f87171",
@@ -315,6 +294,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
+    short: "AI Foundations Associate",
     issuer: "Oracle",
     tag: "AI & Cloud",
     color: "#f87171",
@@ -324,6 +304,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "Java Programming for Beginners",
+    short: "Java Programming",
     issuer: "Crio.Do",
     tag: "Java",
     color: "#2dd4bf",
@@ -331,6 +312,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "CSS (Basic)",
+    short: "CSS (Basic)",
     issuer: "HackerRank",
     tag: "Frontend",
     color: "#4ade80",
@@ -339,6 +321,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "JavaScript Fundamentals",
+    short: "JavaScript Fundamentals",
     issuer: "GreatStack",
     tag: "JavaScript",
     color: "#38bdf8",

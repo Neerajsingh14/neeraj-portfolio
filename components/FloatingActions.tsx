@@ -2,15 +2,16 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUp } from "lucide-react";
-import { whatsappUrl } from "@/lib/portfolio";
+import { useSite } from "./SiteProvider";
 import { scrollToId } from "@/lib/scroll";
 import { WhatsappIcon } from "./icons";
 
 const R = 22;
 const C = 2 * Math.PI * R;
 
-// Right side stack: upar Back-to-top (scroll ke baad), neeche WhatsApp (mobile/tablet)
+// Right side: upar gol Back-to-top (scroll ke baad, footer tak), neeche WhatsApp (mobile/tablet)
 export default function FloatingActions() {
+  const { whatsappUrl } = useSite();
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
 
@@ -18,7 +19,7 @@ export default function FloatingActions() {
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
-      setShow(window.scrollY > 500);
+      setShow(window.scrollY > 300);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -45,7 +46,7 @@ export default function FloatingActions() {
             whileTap={{ scale: 0.92 }}
             onClick={() => scrollToId("top")}
             aria-label="Back to top"
-            className="relative flex h-12 w-12 items-center justify-center rounded-full bg-surface/95 shadow-xl shadow-accent/20 backdrop-blur-md sm:h-14 sm:w-14"
+            className="relative flex h-12 w-12 items-center justify-center rounded-full bg-surface/95 shadow-[0_0_22px_color-mix(in_srgb,var(--accent)_40%,transparent)] backdrop-blur-md"
           >
             <svg className="absolute inset-0 -rotate-90" viewBox="0 0 52 52">
               <defs>
@@ -75,12 +76,12 @@ export default function FloatingActions() {
                 style={{ transition: "stroke-dashoffset 0.15s linear" }}
               />
             </svg>
-            <ArrowUp size={22} className="relative text-accent" />
+            <ArrowUp size={20} className="relative text-accent" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* desktop (xl) pe left rail me WhatsApp hai, isliye yahan hide */}
+      {/* desktop (xl) pe left bar me WhatsApp hai, isliye yahan hide */}
       <motion.a
         href={whatsappUrl}
         target="_blank"
@@ -90,10 +91,10 @@ export default function FloatingActions() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.2, type: "spring" }}
         whileTap={{ scale: 0.92 }}
-        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-[#04210f] shadow-lg shadow-[#25D366]/30 sm:h-14 sm:w-14 xl:hidden"
+        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-[#04210f] shadow-lg shadow-[#25D366]/30 xl:hidden"
       >
         <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/30" />
-        <WhatsappIcon size={26} className="relative" />
+        <WhatsappIcon size={24} className="relative" />
       </motion.a>
     </div>
   );

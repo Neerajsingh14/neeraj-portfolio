@@ -1,27 +1,33 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Sora, Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
-const display = Space_Grotesk({
+// Headings
+const display = Sora({
   variable: "--font-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const sans = Inter({
+// Body text
+const sans = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const mono = JetBrains_Mono({
+// Labels, logo, code
+const mono = Geist_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Neeraj Singh Rajpurohit | Full Stack Web Developer",
+  title: "Neeraj Singh Rajpurohit | AI Powered Web Developer",
   description:
-    "Portfolio of Neeraj Singh Rajpurohit, a Full Stack Web Developer from Bengaluru building responsive web applications with React, Tailwind CSS and Spring Boot.",
+    "Portfolio of Neeraj Singh Rajpurohit, an AI powered web developer from Bengaluru building fast, responsive interfaces with React, Next.js and Tailwind CSS.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

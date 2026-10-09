@@ -1,13 +1,23 @@
 "use client";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
-export default function SmoothScroll({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    const lenis = new Lenis({ duration: 1.2 });
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+type W = Window & { __lenis?: Lenis };
 
-    let id: number;
+// Lenis sirf public site par chalta hai. Admin me ye wheel scroll rok deta tha
+// (sidebar scroll nahi hota tha), isliye /admin par band.
+export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const off = pathname.startsWith("/admin");
+
+  useEffect(() => {
+    if (off) return;
+
+    const lenis = new Lenis({ duration: 1.2 });
+    (window as W).__lenis = lenis;
+
+    let id = 0;
     const raf = (t: number) => {
       lenis.raf(t);
       id = requestAnimationFrame(raf);
@@ -17,9 +27,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     return () => {
       cancelAnimationFrame(id);
       lenis.destroy();
-      delete (window as unknown as { __lenis?: Lenis }).__lenis;
+      delete (window as W).__lenis;
     };
-  }, []);
+  }, [off]);
 
   return <>{children}</>;
 }

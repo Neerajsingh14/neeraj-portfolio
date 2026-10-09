@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import SectionHeading from "./SectionHeading";
-import { skillGroups, type Skill } from "@/lib/portfolio";
+import { useSite, type Skill } from "./SiteProvider";
 
 const iconUrl = (slug: string) =>
   `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${slug}/${slug}-original.svg`;
@@ -12,7 +12,7 @@ function SkillIcon({ skill }: { skill: Skill }) {
 
   if (!skill.icon || failed) {
     return (
-      <span className="font-display text-xl font-bold text-accent">
+      <span className="font-display text-base font-bold text-accent">
         {skill.name.slice(0, 2)}
       </span>
     );
@@ -23,16 +23,17 @@ function SkillIcon({ skill }: { skill: Skill }) {
     <img
       src={iconUrl(skill.icon)}
       alt=""
-      width={36}
-      height={36}
+      width={30}
+      height={30}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`h-9 w-9 object-contain ${skill.invert ? "invert" : ""}`}
+      className={`h-[30px] w-[30px] object-contain ${skill.invert ? "invert" : ""}`}
     />
   );
 }
 
 export default function Skills() {
+  const { skillGroups } = useSite();
   const [tab, setTab] = useState("All");
   const tabs = ["All", ...skillGroups.map((g) => g.title)];
 
@@ -43,20 +44,19 @@ export default function Skills() {
   }, [tab]);
 
   return (
-    <section id="skills" className="wrap py-20 md:py-28">
+    <section id="skills" className="wrap py-16 md:py-24">
       <SectionHeading
         eyebrow="Skills"
         title="My tech stack"
         subtitle="Technologies and tools I use to design, build and ship web applications."
       />
 
-      {/* tabs */}
-      <div className="mt-10 flex flex-wrap gap-2">
+      <div className="mt-8 flex flex-wrap gap-2">
         {tabs.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className="relative rounded-full border border-white/10 px-4 py-2 font-mono text-xs uppercase tracking-wider"
+            className="relative rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider"
           >
             {tab === t && (
               <motion.span
@@ -76,8 +76,7 @@ export default function Skills() {
         ))}
       </div>
 
-      {/* tiles */}
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
+      <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
         <AnimatePresence mode="popLayout">
           {items.map((s) => (
             <motion.div
@@ -88,10 +87,10 @@ export default function Skills() {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.25 }}
               whileHover={{ y: -6 }}
-              className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-white/10 bg-surface px-3 py-6 text-center transition-colors hover:border-accent/60"
+              className="group relative flex flex-col items-center gap-2.5 overflow-hidden rounded-2xl border border-white/10 bg-surface px-3 py-5 text-center transition-colors hover:border-accent/60"
             >
               <span className="pointer-events-none absolute -top-10 h-24 w-24 rounded-full bg-accent/0 blur-2xl transition group-hover:bg-accent/30" />
-              <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5">
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-white/5">
                 <SkillIcon skill={s} />
               </span>
               <span className="relative text-sm font-medium">{s.name}</span>
