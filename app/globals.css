@@ -121,6 +121,20 @@ html.lenis, html.lenis body { height: auto; }
   }
 }
 
+/* autofill fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--fg);
+  caret-color: var(--fg);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg) inset;
+  box-shadow: 0 0 0 1000px color-mix(in srgb, var(--bg) 60%, var(--surface)) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 /* theme extras */
 body {
   background:

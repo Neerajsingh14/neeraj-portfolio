@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendMail } from "@/lib/mail";
+import { contactEmail } from "@/lib/email-templates";
 
 // thoda sa spam rok (serverless me best-effort)
 const hits = new Map<string, number[]>();
@@ -59,12 +60,10 @@ export async function POST(req: Request) {
     if (error) console.error("[contact] save failed:", error.message);
   }
 
-  // 2) mail
-  const mail = await sendMail({
-    subject: `New portfolio message: ${reason} - ${name}`,
-    replyTo: email,
-    text: `Name: ${name}\nEmail: ${email}\nReason: ${reason}\n\nMessage:\n${message}`,
-  });
+  // 2) designed email
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/+$/, "");
+  const mailContent = contactEmail({ name, email, reason, message, siteUrl });
+  const mail = await sendMail({ ...mailContent, replyTo: email });
   if (!mail.ok) console.error("[contact] mail failed:", mail.error);
 
   if (!saved && !mail.ok) {
