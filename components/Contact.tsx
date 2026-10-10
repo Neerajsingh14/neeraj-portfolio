@@ -117,13 +117,13 @@ function ReasonSelect({
 export default function Contact() {
   const { profile, socials, whatsappUrl } = useSite();
   const [form, setForm] = useState(empty);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMsg("");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -135,9 +135,11 @@ export default function Contact() {
         setStatus("sent");
         setForm(empty);
       } else {
+        setErrorMsg(typeof json.error === "string" ? json.error : "");
         setStatus("error");
       }
     } catch {
+      setErrorMsg("Network problem. Please check your internet and try again.");
       setStatus("error");
     }
   };
@@ -333,6 +335,7 @@ export default function Contact() {
                     id="c-message"
                     required
                     rows={5}
+                    minLength={2}
                     placeholder="Tell me about your project or opportunity..."
                     className={`${input} resize-none`}
                     value={form.message}
@@ -359,8 +362,7 @@ export default function Contact() {
 
                 {status === "error" && (
                   <p className="relative text-sm text-red-400">
-                    Something went wrong. Please try again or message me on
-                    WhatsApp.
+                    {errorMsg || "Something went wrong. Please try again or message me on WhatsApp."}
                   </p>
                 )}
               </motion.form>
