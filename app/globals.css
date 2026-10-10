@@ -2,13 +2,13 @@
 
 /* Matte black + blue */
 :root {
-  --bg: #0f1b20;
-  --surface: #172429;
-  --fg: #f6efe2;
-  --muted: #97a4aa;
-  --accent: #6ee0b8;
-  --accent-2: #f5a97f;
-  --accent-fg: #08201a;
+  --bg: #0e1a1c;
+  --surface: #162629;
+  --fg: #f1f3ec;
+  --muted: #98a7a3;
+  --accent: #58d3c0;
+  --accent-2: #f2c768;
+  --accent-fg: #06201b;
 }
 
 @theme inline {
