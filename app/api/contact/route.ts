@@ -36,9 +36,9 @@ export async function POST(req: Request) {
   const reason = clean(body.reason, 80) || "Other";
   const message = clean(body.message, 2000);
 
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length < 2) {
+  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length < 3) {
     return NextResponse.json(
-      { ok: false, error: "Please enter your name, a valid email and a message." },
+      { ok: false, error: "Please fill all fields correctly." },
       { status: 400 }
     );
   }
