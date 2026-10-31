@@ -5,13 +5,13 @@ import { Check, Palette } from "lucide-react";
 
 const KEY = "portfolio-theme";
 
-type Opt = { id: string; name: string; bg: string; a: string; b: string };
+type Opt = { id: string; name: string; bg: string; a: string };
 
-// Naye theme ke rang yahan aur app/globals.css ke "theme switcher" block me, dono jagah badlo
+// Theme ke rang badalne ho to do jagah badlo: yahan aur app/globals.css ke "theme switcher" block me
 const FIXED: Opt[] = [
-  { id: "violet", name: "Violet Night", bg: "#0f0c1d", a: "#a78bfa", b: "#f472b6" },
-  { id: "sunset", name: "Sunset Amber", bg: "#140f0b", a: "#f59e0b", b: "#fb7185" },
-  { id: "ocean", name: "Ocean Blue", bg: "#09121f", a: "#4da3ff", b: "#22d3ee" },
+  { id: "emerald", name: "Emerald & Lime", bg: "#07130f", a: "#34d399" },
+  { id: "indigo", name: "Indigo & Sky", bg: "#0a0d1f", a: "#818cf8" },
+  { id: "ocean", name: "Ocean Blue", bg: "#09121f", a: "#4da3ff" },
 ];
 const IDS = FIXED.map((t) => t.id);
 
@@ -22,33 +22,25 @@ function readDefaults() {
   root.removeAttribute("data-theme");
   const cs = getComputedStyle(root);
   const get = (v: string, d: string) => cs.getPropertyValue(v).trim() || d;
-  const out = {
-    bg: get("--bg", "#0b0b0c"),
-    a: get("--accent", "#6ee0b8"),
-    b: get("--accent-2", "#f5a97f"),
-  };
+  const out = { bg: get("--bg", "#0b0b0c"), a: get("--accent", "#6ee0b8") };
   if (cur) root.setAttribute("data-theme", cur);
   return out;
 }
 
-function Swatch({ bg, a, b }: { bg: string; a: string; b: string }) {
+// gol swatch: aadha dark (background), aadha accent
+function Swatch({ bg, a }: { bg: string; a: string }) {
   return (
     <span
-      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/20"
+      className="h-8 w-8 shrink-0 rounded-full border border-white/25"
       style={{ background: `linear-gradient(90deg, ${bg} 50%, ${a} 50%)` }}
-    >
-      <span
-        className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full border border-black/30"
-        style={{ background: b }}
-      />
-    </span>
+    />
   );
 }
 
 export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("default");
-  const [def, setDef] = useState({ bg: "#0b0b0c", a: "#6ee0b8", b: "#f5a97f" });
+  const [def, setDef] = useState({ bg: "#0b0b0c", a: "#6ee0b8" });
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -115,8 +107,8 @@ export default function ThemeSwitcher() {
         aria-label="Change colour theme"
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`relative flex h-12 w-12 items-center justify-center rounded-full border bg-surface/95 text-accent shadow-lg shadow-black/40 transition hover:scale-105 active:scale-95 ${
-          open ? "border-accent" : "border-accent/40 hover:border-accent"
+        className={`relative flex h-12 w-12 items-center justify-center rounded-full border bg-surface text-accent shadow-lg shadow-black/40 transition hover:scale-105 active:scale-95 ${
+          open ? "border-accent" : "border-accent/50 hover:border-accent"
         }`}
       >
         <Palette size={20} />
@@ -132,13 +124,13 @@ export default function ThemeSwitcher() {
             exit={{ opacity: 0, y: 10, scale: 0.96 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             style={{ transformOrigin: "bottom right" }}
-            className="absolute bottom-full right-0 z-10 mb-3 w-64 rounded-2xl border border-white/10 bg-surface p-3 shadow-2xl shadow-black/60"
+            className="absolute bottom-full right-0 z-10 mb-3 w-[17rem] rounded-2xl border border-white/10 bg-surface px-4 pb-3 pt-4 shadow-2xl shadow-black/60"
           >
-            <p className="px-2 pb-2 pt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+            <p className="pb-3 font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
               Colour theme
             </p>
 
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {options.map((o) => {
                 const on = o.id === current;
                 return (
@@ -148,19 +140,13 @@ export default function ThemeSwitcher() {
                     role="menuitemradio"
                     aria-checked={on}
                     onClick={() => apply(o.id)}
-                    className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition ${
-                      on ? "bg-accent/10" : "hover:bg-white/5"
-                    }`}
+                    className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-3.5 rounded-lg px-2 py-2.5 text-left transition hover:bg-white/5"
                   >
-                    <Swatch bg={o.bg} a={o.a} b={o.b} />
-                    <span
-                      className={`min-w-0 flex-1 truncate text-[15px] ${
-                        on ? "font-medium text-fg" : "text-muted"
-                      }`}
-                    >
+                    <Swatch bg={o.bg} a={o.a} />
+                    <span className="min-w-0 flex-1 truncate text-[15px] text-fg">
                       {o.name}
                     </span>
-                    {on && <Check size={17} className="shrink-0 text-accent" />}
+                    {on && <Check size={18} className="shrink-0 text-accent" />}
                   </button>
                 );
               })}

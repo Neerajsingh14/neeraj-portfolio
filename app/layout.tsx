@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 // Page paint hone se pehle saved theme laga deta hai, taaki rang badalta hua na dikhe
-const themeInit = `(function(){try{var t=localStorage.getItem("portfolio-theme");if(t==="violet"||t==="sunset"||t==="ocean"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
+const themeInit = `(function(){try{var t=localStorage.getItem("portfolio-theme");if(t==="emerald"||t==="indigo"||t==="ocean"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -136,8 +136,8 @@ select:-webkit-autofill {
 }
 
 /* theme switcher start */
-html[data-theme="violet"] { --bg: #0f0c1d; --surface: #181430; --fg: #f1eefc; --muted: #a39cc4; --accent: #a78bfa; --accent-2: #f472b6; --accent-fg: #170b33; }
-html[data-theme="sunset"] { --bg: #140f0b; --surface: #1f1812; --fg: #f8efe4; --muted: #b3a393; --accent: #f59e0b; --accent-2: #fb7185; --accent-fg: #231203; }
+html[data-theme="emerald"] { --bg: #07130f; --surface: #0f211a; --fg: #ecf8f2; --muted: #86a89a; --accent: #34d399; --accent-2: #a3e635; --accent-fg: #04180f; }
+html[data-theme="indigo"] { --bg: #0a0d1f; --surface: #121733; --fg: #eceefc; --muted: #949bc6; --accent: #818cf8; --accent-2: #38bdf8; --accent-fg: #0a0c28; }
 html[data-theme="ocean"] { --bg: #09121f; --surface: #101d31; --fg: #eaf2fc; --muted: #8fa4bd; --accent: #4da3ff; --accent-2: #22d3ee; --accent-fg: #04152a; }
 
 /* theme badalte waqt rang smoothly badlein */
