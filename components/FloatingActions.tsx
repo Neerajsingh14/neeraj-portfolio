@@ -5,11 +5,12 @@ import { ArrowUp } from "lucide-react";
 import { useSite } from "./SiteProvider";
 import { scrollToId } from "@/lib/scroll";
 import { WhatsappIcon } from "./icons";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const R = 22;
 const C = 2 * Math.PI * R;
 
-// Right side: upar gol Back-to-top (scroll ke baad, footer tak), neeche WhatsApp (mobile/tablet)
+// Right side ka stack: upar Back-to-top (scroll ke baad), WhatsApp (sirf mobile/tablet), neeche Theme palette
 export default function FloatingActions() {
   const { whatsappUrl } = useSite();
   const [progress, setProgress] = useState(0);
@@ -96,6 +97,8 @@ export default function FloatingActions() {
         <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/30" />
         <WhatsappIcon size={24} className="relative" />
       </motion.a>
+
+      <ThemeSwitcher />
     </div>
   );
 }

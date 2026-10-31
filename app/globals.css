@@ -135,6 +135,22 @@ select:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s;
 }
 
+/* theme switcher start */
+html[data-theme="violet"] { --bg: #0f0c1d; --surface: #181430; --fg: #f1eefc; --muted: #a39cc4; --accent: #a78bfa; --accent-2: #f472b6; --accent-fg: #170b33; }
+html[data-theme="sunset"] { --bg: #140f0b; --surface: #1f1812; --fg: #f8efe4; --muted: #b3a393; --accent: #f59e0b; --accent-2: #fb7185; --accent-fg: #231203; }
+html[data-theme="ocean"] { --bg: #09121f; --surface: #101d31; --fg: #eaf2fc; --muted: #8fa4bd; --accent: #4da3ff; --accent-2: #22d3ee; --accent-fg: #04152a; }
+
+/* theme badalte waqt rang smoothly badlein */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-anim body,
+  html.theme-anim body * {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 0.35s;
+    transition-timing-function: ease;
+  }
+}
+/* theme switcher end */
+
 /* theme extras */
 body {
   background:

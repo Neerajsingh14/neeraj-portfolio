@@ -19,7 +19,7 @@ const titles: Record<string, string> = {
   education: "Education",
   certificates: "Certificates",
   sections: "Section headings",
-  profiles: "Profiles",
+  profiles: "Profiles", resume: "Resume",
   settings: "Settings",
   messages: "Messages",
 };

@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
   Award,
-  Briefcase,
+  Briefcase, FileText,
   GraduationCap,
   Layers,
   LayoutDashboard,
@@ -38,7 +38,7 @@ const groups: { title: string; items: Item[] }[] = [
     title: "Site",
     items: [
       { href: "/admin/sections", label: "Section headings", icon: ListChecks },
-      { href: "/admin/profiles", label: "Profiles", icon: Layers },
+      { href: "/admin/profiles", label: "Profiles", icon: Layers }, { href: "/admin/resume", label: "Resume", icon: FileText },
       { href: "/admin/settings", label: "Settings", icon: Settings },
     ],
   },
